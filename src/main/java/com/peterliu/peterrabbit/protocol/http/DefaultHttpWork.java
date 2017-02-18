@@ -128,7 +128,7 @@ public class DefaultHttpWork extends HttpWork {
      */
     private String addLink(String rootPath) {
         String[] paths = rootPath.split("/");
-        StringBuilder sb = new StringBuilder("<a href=\"/\"><img  height=\"24\" width=\"24\" style=\"padding:0px\" src=\"" + ImageMap.getRootImagePath() + "\"/></a><a href=\"/\">/</a>");
+        StringBuilder sb = new StringBuilder("<a title=\"PeterRabbit's Home, WebSite:https://github.com/PeterLiu33/PeterRabbit\" href=\"/\"><img  height=\"24\" width=\"24\" style=\"padding:0px\" src=\"" + ImageMap.getRootImagePath() + "\"/></a><a href=\"/\">/</a>");
         String temp = "/";
         for (String path : paths) {
             if (StringUtils.isBlank(path)) {
