@@ -79,6 +79,7 @@ public class Context extends ConcurrentHashMap<String, Object> implements Contex
     public void addFilter(FilterAdapter filter) {
         FilterAdapter filterAdapter = (FilterAdapter) threadLocalContext.get().get(FILTER);
         if (filterAdapter != null) {
+
             while (filterAdapter.next() != null) {
                 filterAdapter = (FilterAdapter) filterAdapter.next();
             }

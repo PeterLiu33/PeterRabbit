@@ -32,3 +32,4 @@ Here is the table show all properties.
 |com.peterliu.peterrabbit.server.port|server port|8300|
 |com.peterliu.peterrabbit.handler.curr.coresize|core size of thread pool, and max size equal to coresize * 100|5|
 |com.peterliu.peterrabbit.server.file.dictionary.filter.switch|whether switch( on/off ) of the file list display filter.|off|
+|com.peterliu.peterrabbit.client.cache.maxage|max cache time on client side(seconds)|1 hours|

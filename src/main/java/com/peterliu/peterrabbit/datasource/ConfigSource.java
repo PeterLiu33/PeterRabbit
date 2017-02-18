@@ -76,4 +76,11 @@ public interface ConfigSource {
      * @return
      */
     boolean isDictionaryFilterOpen();
+
+    /**
+     * 获取客户端缓存最大时间
+     *
+     * @return
+     */
+    long getClientMaxAge();
 }

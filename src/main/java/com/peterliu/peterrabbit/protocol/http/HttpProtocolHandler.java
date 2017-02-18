@@ -17,20 +17,13 @@ import java.util.regex.Matcher;
 public class HttpProtocolHandler extends ProtocolHandlerAdapter {
 
 
-    List<Filter> filters;
-
-    {
-        //增加默认过滤器
-        filters = Arrays.asList(
+    @Override
+    public List<Filter> getFilters() {
+        return Arrays.asList(
                 (Filter) new ResourcesExistFilter(),
                 (Filter) new CacheHeaderCheckFilter(),
                 (Filter) new CacheCheckFilter()
         );
-    }
-
-    @Override
-    public List<Filter> getFilters() {
-        return filters;
     }
 
     @Override
@@ -94,8 +87,7 @@ public class HttpProtocolHandler extends ProtocolHandlerAdapter {
 
     @Override
     public <K extends Response, T extends Request> K getResponse(TaskData taskData, T request, String content) {
-        HttpResponse httpResponse = new HttpResponse();
-        httpResponse.setRequest(request);
+        HttpResponse httpResponse = new HttpResponse(request);
         httpResponse.setContent(content);
         if (content == null) {
             httpResponse.setStatusCode(HttpResponse.ResponseCode.NOT_FOUND);
@@ -107,8 +99,7 @@ public class HttpProtocolHandler extends ProtocolHandlerAdapter {
 
     @Override
     public <K extends Response, T extends Request> K getResponse(TaskData taskData, T request, ByteBuffer content) {
-        HttpResponse httpResponse = new HttpResponse();
-        httpResponse.setRequest(request);
+        HttpResponse httpResponse = new HttpResponse(request);
         httpResponse.setContentBuffer(content);
         if (content == null) {
             httpResponse.setStatusCode(HttpResponse.ResponseCode.NOT_FOUND);

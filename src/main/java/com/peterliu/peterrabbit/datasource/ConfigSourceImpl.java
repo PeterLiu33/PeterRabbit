@@ -47,6 +47,8 @@ public class ConfigSourceImpl implements Constants, ConfigSource {
         configurations.put(DEFAULT_INDEX_PAGE, getProperty(DEFAULT_INDEX_PAGE, INNER_RESOURCES_PATH + "them" + PATH_SEPARATOR + "default" + PATH_SEPARATOR));
         //目录列表过滤开关,on-打开;off-关闭
         configurations.put(FILE_FILTER_SWITCH, getProperty(FILE_FILTER_SWITCH, "off"));
+        //客户端缓存最大时间
+        configurations.put(CLIENT_RESOURCES_CACHE_MAX_AGE_SECONDS, getProperty(CLIENT_RESOURCES_CACHE_MAX_AGE_SECONDS, "3600000"));
     }
 
     private String getProperty(String name, String defaultValue) {
@@ -112,6 +114,11 @@ public class ConfigSourceImpl implements Constants, ConfigSource {
     @Override
     public boolean isDictionaryFilterOpen() {
         return "on".equalsIgnoreCase(configurations.get(FILE_FILTER_SWITCH));
+    }
+
+    @Override
+    public long getClientMaxAge() {
+        return Long.valueOf(configurations.get(CLIENT_RESOURCES_CACHE_MAX_AGE_SECONDS));
     }
 
     private static final ConfigSource INSTANCE = new ConfigSourceImpl();

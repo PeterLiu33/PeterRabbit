@@ -72,4 +72,9 @@ public interface Constants {
      * 内部文件的根目录
      */
     String INNER_RESOURCES_PATH = "/~resources_path/";
+
+    /**
+     * 客户端缓存的最大时间, 1个小时
+     */
+    String CLIENT_RESOURCES_CACHE_MAX_AGE_SECONDS = "com.peterliu.peterrabbit.client.cache.maxage";
 }

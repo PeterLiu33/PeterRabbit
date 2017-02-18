@@ -1,6 +1,9 @@
 package com.peterliu.peterrabbit.protocol.http;
 
+import com.peterliu.peterrabbit.datasource.ConfigSource;
+import com.peterliu.peterrabbit.datasource.ConfigSourceImpl;
 import com.peterliu.peterrabbit.protocol.Context;
+import com.peterliu.peterrabbit.protocol.Request;
 import com.peterliu.peterrabbit.protocol.Response;
 import com.peterliu.peterrabbit.utils.StringUtils;
 
@@ -17,6 +20,22 @@ public class HttpResponse extends Response {
     private ResponseCode statusCode;
 
     private String contentType;
+
+    public <T extends Request> HttpResponse(T request){
+        this.setRequest(request);
+        //增加默认的响应头
+        addHeader("Server", "PeterRabbit/1.0");
+        addHeader("X-Powered-By", "Java");
+        addHeader("Allow", "get,post");
+        Calendar calender = Calendar.getInstance();
+        long clientMaxAge = ((HttpRequest)getRequest()).getCacheMaxAge();
+        calender.add(Calendar.SECOND, (int) clientMaxAge);
+        addHeader("Expires", calender.getTime().toString());
+        addHeader("Expires", calender.getTime().toString());
+        addHeader("Cache-Control", String.format("public,max-age=%s", clientMaxAge));
+        addHeader("Connection", "close");//连接关闭
+//        addHeader();
+    }
 
     private Map<String, String> headers = new HashMap<String, String>();
 
@@ -63,20 +82,6 @@ public class HttpResponse extends Response {
         return stringBuilder.toString();
     }
 
-//    ThreadLocal<>
-
-    {
-        //增加默认的响应头
-        addHeader("Server", "PeterRabbit/1.0");
-        addHeader("X-Powered-By", "Java");
-        addHeader("Allow", "get,post");
-        Calendar calender = Calendar.getInstance();
-        calender.add(Calendar.DAY_OF_YEAR, 1);
-        addHeader("Expires", calender.getTime().toString());//缓存一天
-        addHeader("Expires", calender.getTime().toString());//缓存一天
-        addHeader("Connection", "close");//连接关闭
-//        addHeader();
-    }
     @Override
     public String getResponseStr() {
         Context context = Context.getCurrentContext();
@@ -94,7 +99,7 @@ public class HttpResponse extends Response {
         }
         File file = context.getFileObject();
         if(file != null){
-            addHeader("Last-Modified", new Date(file.lastModified()).toString());
+            addHeader("Last-Modified", String.valueOf(file.lastModified()));
         }
         stringBuilder.append(buildHeaders()).append(CRLF);
         if(getContent() != null){

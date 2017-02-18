@@ -26,7 +26,9 @@ public abstract class ResponseFactory {
     public static <T extends Response> T build304Response(){
         Context context = Context.getCurrentContext();
         ProtocolHandler handler = context.getHandler();
-        return handler.getResponse(context.getTaskData(), context.getRequest(), (String) null);
+        HttpResponse response = handler.getResponse(context.getTaskData(), context.getRequest(), (String) null);
+        response.setStatusCode(HttpResponse.ResponseCode.NOT_MODIFIED);
+        return (T)response;
     }
 
     public static <T extends Response> T buildUnsupportURLResponse(){
