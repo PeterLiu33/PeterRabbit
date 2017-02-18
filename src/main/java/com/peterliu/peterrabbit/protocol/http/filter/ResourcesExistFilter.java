@@ -13,6 +13,7 @@ import com.peterliu.peterrabbit.utils.PropertyOrFileUtils;
 import java.io.File;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 

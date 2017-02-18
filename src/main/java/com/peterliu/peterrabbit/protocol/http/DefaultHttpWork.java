@@ -38,7 +38,10 @@ public class DefaultHttpWork extends HttpWork {
         if (url.startsWith(Constants.INNER_RESOURCES_PATH)) {
             //需要读取内部数据
             String temp = url.substring(Constants.INNER_RESOURCES_PATH.length());
-            return handler.getResponse(context.getTaskData(), request, PropertyOrFileUtils.getFileAsByteBuffer(PropertyOrFileUtils.getClassLoader(), temp));
+            String ETag = "inner";
+            HttpResponse response = handler.getResponse(context.getTaskData(), request, PropertyOrFileUtils.getFileAsByteBuffer(PropertyOrFileUtils.getClassLoader(), temp));
+            response.addHeader("ETag", ETag);
+            return (T)response;
         }
         //判断是否为文件夹
         File file = request.getDictionary();

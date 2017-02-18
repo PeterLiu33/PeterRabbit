@@ -98,6 +98,9 @@ public class HttpResponse extends Response {
             addHeader("Content-Length", String.valueOf(getContentBuffer().limit()));
         }
         File file = context.getFileObject();
+        if(file == null){
+            file = ((HttpRequest)getRequest()).getDictionary();
+        }
         if(file != null){
             addHeader("Last-Modified", String.valueOf(file.lastModified()));
         }
