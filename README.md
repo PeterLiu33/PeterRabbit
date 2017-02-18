@@ -4,7 +4,9 @@ A simple TCP/IP server like Apache, but small and exquisite. Anywhere it's very 
 
 # How to Use it
 
-After clone the source code, you'll see the shell named 'run.sh'. Simply, run that command, and you can get outputs from console.
+After clone the source code, first of all, you should run 'gradle wrapper' to build the gradlew environment.
+
+At the root of project, you can see the shell named 'run.sh'. Simply, run that command, and you can get outputs from console.
 
 ``` txt
 二月 18, 2017 11:57:48 下午 com.peterliu.peterrabbit.channel.SelectorRegister startServer
