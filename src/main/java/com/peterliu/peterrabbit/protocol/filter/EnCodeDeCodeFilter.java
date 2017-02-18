@@ -1,7 +1,9 @@
-package com.peterliu.peterrabbit.protocol;
+package com.peterliu.peterrabbit.protocol.filter;
 
 import com.peterliu.peterrabbit.channel.TaskData;
 import com.peterliu.peterrabbit.datasource.ConfigSource;
+import com.peterliu.peterrabbit.protocol.Context;
+import com.peterliu.peterrabbit.protocol.FilterAdapter;
 
 import java.io.UnsupportedEncodingException;
 import java.util.logging.Level;

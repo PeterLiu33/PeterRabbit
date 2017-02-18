@@ -2,13 +2,13 @@ package com.peterliu.peterrabbit.protocol.http;
 
 import com.peterliu.peterrabbit.channel.TaskData;
 import com.peterliu.peterrabbit.protocol.*;
+import com.peterliu.peterrabbit.protocol.http.filter.CacheCheckFilter;
+import com.peterliu.peterrabbit.protocol.http.filter.CacheHeaderCheckFilter;
+import com.peterliu.peterrabbit.protocol.http.filter.ResourcesExistFilter;
 import com.peterliu.peterrabbit.utils.StringUtils;
 
 import java.nio.ByteBuffer;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.regex.Matcher;
 
 /**
@@ -17,11 +17,26 @@ import java.util.regex.Matcher;
 public class HttpProtocolHandler extends ProtocolHandlerAdapter {
 
 
+    List<Filter> filters;
+
+    {
+        //增加默认过滤器
+        filters = Arrays.asList(
+                (Filter) new ResourcesExistFilter(),
+                (Filter) new CacheHeaderCheckFilter(),
+                (Filter) new CacheCheckFilter()
+        );
+    }
+
+    @Override
+    public List<Filter> getFilters() {
+        return filters;
+    }
 
     @Override
     public boolean detectType(TaskData taskData) {
         String firstLineStr = getFirstLine(taskData.getLoad());
-        if(StringUtils.isNotBlank(firstLineStr) && firstLineStr.contains("HTTP")){
+        if (StringUtils.isNotBlank(firstLineStr) && firstLineStr.contains("HTTP")) {
             return true;
         }
         return false;
@@ -39,19 +54,19 @@ public class HttpProtocolHandler extends ProtocolHandlerAdapter {
         String loaderStr = context.getLoaderStr();
         Matcher matcher = linePattern.matcher(loaderStr);
         List<String> strings = new ArrayList<String>();
-        while(matcher.find()){
+        while (matcher.find()) {
             strings.add(matcher.group(1));
         }
-        if(strings.size() > 0){
+        if (strings.size() > 0) {
             String[] temp = strings.get(0).split(" ");
             request.setMethod(temp[0]);
             request.setVersion(temp[2].split("/")[1]);
             temp = temp[1].split("\\?");
             request.setUrl(temp[0]);
             Map<String, String> params = new HashMap<String, String>();
-            if(temp.length >1 && StringUtils.isNotBlank(temp[1])){
-                for(String t : temp[1].split("&")){
-                    if(StringUtils.isNotBlank(t)){
+            if (temp.length > 1 && StringUtils.isNotBlank(temp[1])) {
+                for (String t : temp[1].split("&")) {
+                    if (StringUtils.isNotBlank(t)) {
                         String[] temp2 = t.split("=");
                         params.put(temp2[0], temp2[1]);
                     }
@@ -59,13 +74,13 @@ public class HttpProtocolHandler extends ProtocolHandlerAdapter {
             }
             request.setParams(params);
             Map<String, String> headers = new HashMap<String, String>();
-            for(int i = 1; i< strings.size() ; i++){
-                if("".equals(strings.get(i))){
+            for (int i = 1; i < strings.size(); i++) {
+                if ("".equals(strings.get(i))) {
                     break;
                 }
                 String str = strings.get(i);
                 int k = str.indexOf(":");
-                if(k > 0 && k != str.length() -1) {
+                if (k > 0 && k != str.length() - 1) {
                     headers.put(str.substring(0, k), str.substring(k + 1).trim());
                 }
             }
@@ -82,9 +97,9 @@ public class HttpProtocolHandler extends ProtocolHandlerAdapter {
         HttpResponse httpResponse = new HttpResponse();
         httpResponse.setRequest(request);
         httpResponse.setContent(content);
-        if(content == null){
+        if (content == null) {
             httpResponse.setStatusCode(HttpResponse.ResponseCode.NOT_FOUND);
-        }else{
+        } else {
             httpResponse.setStatusCode(HttpResponse.ResponseCode.OK);
         }
         return (K) httpResponse;
@@ -95,9 +110,9 @@ public class HttpProtocolHandler extends ProtocolHandlerAdapter {
         HttpResponse httpResponse = new HttpResponse();
         httpResponse.setRequest(request);
         httpResponse.setContentBuffer(content);
-        if(content == null){
+        if (content == null) {
             httpResponse.setStatusCode(HttpResponse.ResponseCode.NOT_FOUND);
-        }else{
+        } else {
             httpResponse.setStatusCode(HttpResponse.ResponseCode.OK);
         }
         return (K) httpResponse;

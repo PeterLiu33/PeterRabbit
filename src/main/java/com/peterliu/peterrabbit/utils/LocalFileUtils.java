@@ -4,6 +4,7 @@ package com.peterliu.peterrabbit.utils;
 import com.peterliu.peterrabbit.datasource.ConfigSource;
 import com.peterliu.peterrabbit.datasource.Constants;
 import com.peterliu.peterrabbit.protocol.Context;
+import com.peterliu.peterrabbit.protocol.http.HttpRequest;
 import sun.nio.ch.DirectBuffer;
 
 import java.io.*;
@@ -406,17 +407,7 @@ public abstract class LocalFileUtils {
 
     public static String checkAndModifyPath(String url, ConfigSource configSource) {
         Context context = Context.getCurrentContext();
-        String rootPath = configSource.getRootPath();
-        String filePath = rootPath + url;
-        if (filePath.contains("/../")) {
-            return null;
-        }
-        try {
-            filePath = URLDecoder.decode(filePath, "utf-8");
-        } catch (UnsupportedEncodingException e) {
-            logger.log(Level.WARNING, "fail to decode url filepath", e);
-        }
-        filePath = filePath.replaceAll("/+", "/").replaceAll("/", Constants.PATH_SEPARATOR);;
+        String filePath = ((HttpRequest)context.getRequest()).getFilePath();
         //检查后缀名是有后缀名
         int index = filePath.lastIndexOf("/");
         String suffix = null;
@@ -456,17 +447,7 @@ public abstract class LocalFileUtils {
      */
     public static File checkDictionary(String url, ConfigSource configSource) {
         Context context = Context.getCurrentContext();
-        String rootPath = configSource.getRootPath();
-        String filePath = rootPath + url;
-        if (filePath.contains("/../")) {
-            return null;
-        }
-        try {
-            filePath = URLDecoder.decode(filePath, "utf-8");
-        } catch (UnsupportedEncodingException e) {
-            logger.log(Level.WARNING, "fail to decode url filepath", e);
-        }
-        filePath = filePath.replaceAll("/+", "/").replaceAll("/", Constants.PATH_SEPARATOR);
+        String filePath = ((HttpRequest)context.getRequest()).getFilePath();
         final File file = new File(filePath);
         if (file.isDirectory()) {
             //如果是目录,则直接返回null

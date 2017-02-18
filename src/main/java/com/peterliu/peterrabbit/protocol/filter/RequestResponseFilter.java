@@ -1,6 +1,10 @@
-package com.peterliu.peterrabbit.protocol;
+package com.peterliu.peterrabbit.protocol.filter;
 
 import com.peterliu.peterrabbit.datasource.ConfigSource;
+import com.peterliu.peterrabbit.protocol.Context;
+import com.peterliu.peterrabbit.protocol.FilterAdapter;
+import com.peterliu.peterrabbit.protocol.ProtocolHandler;
+import com.peterliu.peterrabbit.protocol.Request;
 
 /**
  * 包装Request

@@ -73,6 +73,7 @@ public class HttpResponse extends Response {
         Calendar calender = Calendar.getInstance();
         calender.add(Calendar.DAY_OF_YEAR, 1);
         addHeader("Expires", calender.getTime().toString());//缓存一天
+        addHeader("Expires", calender.getTime().toString());//缓存一天
         addHeader("Connection", "close");//连接关闭
 //        addHeader();
     }

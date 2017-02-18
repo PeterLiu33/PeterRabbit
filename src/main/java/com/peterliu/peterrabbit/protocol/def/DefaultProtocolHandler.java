@@ -1,12 +1,12 @@
 package com.peterliu.peterrabbit.protocol.def;
 
 import com.peterliu.peterrabbit.channel.TaskData;
-import com.peterliu.peterrabbit.protocol.ProtocolHandlerAdapter;
-import com.peterliu.peterrabbit.protocol.ProtocolType;
-import com.peterliu.peterrabbit.protocol.Request;
-import com.peterliu.peterrabbit.protocol.Response;
+import com.peterliu.peterrabbit.protocol.*;
+import com.peterliu.peterrabbit.protocol.http.filter.CacheHeaderCheckFilter;
 
 import java.nio.ByteBuffer;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * Created by bavatinolab on 17/2/2.

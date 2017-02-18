@@ -41,7 +41,7 @@ public class DefaultHttpWork extends HttpWork {
             return handler.getResponse(context.getTaskData(), request, PropertyOrFileUtils.getFileAsByteBuffer(PropertyOrFileUtils.getClassLoader(), temp));
         }
         //判断是否为文件夹
-        File file = LocalFileUtils.checkDictionary(url, configSource);
+        File file = request.getDictionary();
         if (file != null) {
             //是文件夹
             //设置为HTML格式
@@ -112,11 +112,10 @@ public class DefaultHttpWork extends HttpWork {
                 }
             } else {
                 //非法文件后缀
-                return handler.getResponse(context.getTaskData(), request, "unsupported file type!");
+                return ResponseFactory.buildUnsupportFileResponse();
             }
         } else {
-            String content = null;
-            return handler.getResponse(context.getTaskData(), request, content);
+            return handler.getResponse(context.getTaskData(), request, (String)null);
         }
     }
 

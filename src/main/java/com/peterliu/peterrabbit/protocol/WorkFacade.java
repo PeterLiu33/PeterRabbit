@@ -27,7 +27,7 @@ public class WorkFacade implements Work {
         if(work1 != null){
             return work1.run();
         }
-        return (T) new Response().setRequest(context.getRequest()).setContent("unsupport protocol!");
+        return (T) new Response().setRequest(context.getRequest()).setContent("unsupported protocol!");
     }
 
     @Override
