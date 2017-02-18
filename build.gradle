@@ -1,0 +1,14 @@
+apply from: 'gradle/common.gradle'
+
+dependencies {
+
+}
+
+jar {
+    //构建清单文件
+    manifest {
+        attributes 'Main-Class': 'com.peterliu.peterrabbit.Peter'
+        attributes 'Created-By': 'PeterLiu'
+        attributes 'Manifest-Version': '1.0'
+    }
+}

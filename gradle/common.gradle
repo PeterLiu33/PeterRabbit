@@ -1,0 +1,46 @@
+group "$group_name"
+version "$group_version"
+
+apply plugin: 'java'
+apply plugin: 'idea'
+
+sourceCompatibility = 1.6
+targetCompatibility = 1.6
+
+repositories {
+//    mavenCentral()
+    maven {
+        url 'http://maven.aliyun.com/nexus/content/groups/public/'
+    }
+}
+
+def env = System.getProperty("profile") ?: "$profile"
+
+sourceSets {
+    main {
+        resources.srcDirs += ["src/main/profile/$env"]
+    }
+    test {
+        resources.srcDirs += ["src/main/profile/$env"]
+    }
+}
+
+//configurations {
+//    compile.exclude group:'commons-logging'
+//    testCompile.exclude group:'commons-logging'
+//}
+
+task mkDir << {
+    sourceSets*.java.srcDirs*.each { it.mkdirs() }
+    sourceSets*.resources.srcDirs*.each { it.mkdirs() }
+}
+
+task wrapper(type: Wrapper) {
+    gradleVersion = '2.14.1'
+    archiveBase = 'PROJECT'
+    archivePath = 'gradle/dists'
+}
+
+test {
+    systemProperty "spring.profiles.active", "$env"
+}

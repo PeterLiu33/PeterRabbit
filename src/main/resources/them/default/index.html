@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>文件目录列表</title>
+</head>
+<style>
+    a:link {
+        text-decoration: none;
+        color: red;
+    }
+
+    a:visited {
+        color: green;
+        text-decoration: none;
+    }
+
+    a:hover {
+        color: blue;
+        text-decoration: underline;
+    }
+
+    a:active {
+        color: orange;
+        text-decoration: blink;
+    }
+
+    img {
+        border: 0;
+        margin: 0;
+        padding: 2px;
+        vertical-align: middle
+    }
+</style>
+<body>
+<div style="position: fixed;width: 100%;top: 0px;left:0px;margin:0px;padding-left:10px;padding-right:10px;height:115px;background-color: whitesmoke">
+    <h4>${dictionary}</h4>
+    <div>${back}</div>
+    <hr>
+</div>
+<div  style="width: 100%;margin-top: 120px">
+    <ul>
+        ${fileList}
+    </ul>
+</div>
+</body>
+</html>
