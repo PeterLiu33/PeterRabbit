@@ -12,11 +12,17 @@ import com.peterliu.peterrabbit.utils.LocalFileUtils;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.channels.SocketChannel;
+import java.security.DigestInputStream;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.util.logging.Logger;
 
 /**
  * Created by bavatinolab on 17/2/4.
  */
 public class DefaultProtocolResolver implements Resolver {
+
+    private static final Logger logger = Logger.getLogger(DefaultProtocolResolver.class.getCanonicalName());
 
     private boolean preCheckResult = true;
 

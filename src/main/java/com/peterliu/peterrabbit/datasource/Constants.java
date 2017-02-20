@@ -77,4 +77,9 @@ public interface Constants {
      * 客户端缓存的最大时间, 1个小时
      */
     String CLIENT_RESOURCES_CACHE_MAX_AGE_SECONDS = "com.peterliu.peterrabbit.client.cache.maxage";
+
+    /**
+     * 判断是否需要进行加签
+     */
+    String MESSAGE_DIGEST_ETAG_ENABLE = "com.peterliu.peterrabbit.message.digest";
 }

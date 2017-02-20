@@ -5,21 +5,35 @@ import com.peterliu.peterrabbit.datasource.ConfigSourceImpl;
 import com.peterliu.peterrabbit.protocol.Context;
 import com.peterliu.peterrabbit.protocol.Request;
 import com.peterliu.peterrabbit.protocol.Response;
+import com.peterliu.peterrabbit.utils.CacheSource;
+import com.peterliu.peterrabbit.utils.CacheUtils;
 import com.peterliu.peterrabbit.utils.StringUtils;
 
 import java.io.File;
+import java.nio.ByteBuffer;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.*;
+import java.util.concurrent.TimeUnit;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Created by bavatinolab on 17/2/3.
  */
 public class HttpResponse extends Response {
 
+    private static final Logger logger = Logger.getLogger(HttpResponse.class.getCanonicalName());
+
     public static final String CRLF = "\r\n";
+
+    private static ConfigSource configSource = ConfigSourceImpl.instance();
 
     private ResponseCode statusCode;
 
     private String contentType;
+
+    private String messageDigest;
 
     public <T extends Request> HttpResponse(T request){
         this.setRequest(request);
@@ -102,7 +116,7 @@ public class HttpResponse extends Response {
             file = ((HttpRequest)getRequest()).getDictionary();
         }
         if(file != null){
-            addHeader("Last-Modified", String.valueOf(file.lastModified()));
+            addHeader("Last-Modified", new Date(file.lastModified()).toString());
         }
         stringBuilder.append(buildHeaders()).append(CRLF);
         if(getContent() != null){
@@ -133,5 +147,56 @@ public class HttpResponse extends Response {
         public String getMsg() {
             return msg;
         }
+    }
+
+    @Override
+    public Response setContent(String content) {
+        return super.setContent(content);
+    }
+
+    @Override
+    public Response setContentBuffer(ByteBuffer contentBuffer) {
+        if(configSource.isMessageDigest() &&
+                contentBuffer != null &&
+                Context.getCurrentContext().getFileObject() != null){
+            //需要加签
+            try {
+                final String path = Context.getCurrentContext().getFileObject().getPath();
+                if((this.messageDigest = CacheUtils.get(path)) == null) {
+                    MessageDigest messageDigest = MessageDigest.getInstance("MD5");
+                    messageDigest.update(contentBuffer.slice());
+                    final String temp = this.messageDigest = StringUtils.byteArrayToHex2(messageDigest.digest());
+                    CacheUtils.save(TimeUnit.MINUTES, configSource.getClientMaxAge() / 60, new CacheSource<String>() {
+                        @Override
+                        public String getKey() {
+                            return path;
+                        }
+
+                        @Override
+                        public String getCurrent() {
+                            return temp;
+                        }
+
+                        @Override
+                        public String refresh() {
+                            return null;
+                        }
+                    });
+                    addHeader("ETAG", this.messageDigest);
+                }else{
+                    addHeader("ETAG", this.messageDigest);
+                }
+            } catch (NoSuchAlgorithmException e) {
+                logger.log(Level.WARNING, "fail to get messageDigest!", e);
+            }
+        }
+        return super.setContentBuffer(contentBuffer);
+    }
+
+    public String getMessageDigest() {
+        if(messageDigest == null && Context.getCurrentContext().getFileObject() != null){
+            messageDigest = CacheUtils.get(Context.getCurrentContext().getFileObject().getPath());
+        }
+        return messageDigest;
     }
 }

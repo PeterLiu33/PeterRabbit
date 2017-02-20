@@ -80,6 +80,11 @@ public class HttpProtocolHandler extends ProtocolHandlerAdapter {
 //            //判断为断点续传下载文件
 //            String range = request.getHeaders().get("Range");
 //            String[] ranges = range.split("-");
+            if(headers.containsKey("If-None-Match")){
+                request.setMessageDigest(headers.get("If-None-Match"));
+            }else if(headers.containsKey("If-Match")){
+                request.setMessageDigest(headers.get("If-Match"));
+            }
             request.setHeaders(headers);
         }
         return request;

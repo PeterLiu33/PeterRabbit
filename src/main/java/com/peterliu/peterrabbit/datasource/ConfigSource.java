@@ -83,4 +83,11 @@ public interface ConfigSource {
      * @return
      */
     long getClientMaxAge();
+
+    /**
+     * 判断是否需要MD5加签,ETAG
+     *
+     * @return
+     */
+    boolean isMessageDigest();
 }

@@ -24,6 +24,8 @@ public class HttpRequest extends Request {
     //文件地址
     private String filePath = null;
 
+    private String messageDigest = null;
+
     /**
      * 断点续传使用
      */
@@ -84,5 +86,13 @@ public class HttpRequest extends Request {
 
     public void setFilePath(String filePath) {
         this.filePath = filePath;
+    }
+
+    public String getMessageDigest() {
+        return messageDigest;
+    }
+
+    public void setMessageDigest(String messageDigest) {
+        this.messageDigest = messageDigest;
     }
 }

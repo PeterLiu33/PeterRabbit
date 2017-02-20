@@ -20,20 +20,21 @@ public class CacheHeaderCheckFilter extends FilterAdapter {
         Context context = Context.getCurrentContext();
         HttpRequest request = context.getRequest();
         Map<String, String> headers = request.getHeaders();
-        if(headers != null && headers.size() > 0) {
+        if (headers != null && headers.size() > 0) {
             String cacheControl = headers.get("Cache-Control");
-            if ("no-cache".equalsIgnoreCase(cacheControl) ||
+            if (!headers.containsKey("Range") ||
+                    "no-cache".equalsIgnoreCase(cacheControl) ||
                     "no-cache".equalsIgnoreCase(headers.get("Pragma")) ||
                     "no-store".equalsIgnoreCase(cacheControl) ||
-                    configSource.getClientMaxAge() <= 0){
+                    configSource.getClientMaxAge() <= 0) {
                 //客户端需要强刷最新数据, 或者服务端不允许进行缓存
                 request.setNeedJudgeCache(false);
-            }else if(StringUtils.isNotBlank(cacheControl) && cacheControl.contains("max-age=")){
+            } else if (StringUtils.isNotBlank(cacheControl) && cacheControl.contains("max-age=")) {
                 //获取客户端允许缓存的最大时间
                 String[] strings = cacheControl.split(",");
-                if(strings != null && strings.length > 0){
-                    for(String temp : strings){
-                        if(temp.startsWith("max-age=")){
+                if (strings != null && strings.length > 0) {
+                    for (String temp : strings) {
+                        if (temp.startsWith("max-age=")) {
                             long maxAge = Long.valueOf(temp.split("=")[1]);
                             request.setNeedJudgeCache(true);
                             request.setCacheMaxAge(maxAge);

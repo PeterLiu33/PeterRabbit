@@ -49,6 +49,8 @@ public class ConfigSourceImpl implements Constants, ConfigSource {
         configurations.put(FILE_FILTER_SWITCH, getProperty(FILE_FILTER_SWITCH, "off"));
         //客户端缓存最大时间
         configurations.put(CLIENT_RESOURCES_CACHE_MAX_AGE_SECONDS, getProperty(CLIENT_RESOURCES_CACHE_MAX_AGE_SECONDS, "3600000"));
+        //是否需要MD5加签
+        configurations.put(MESSAGE_DIGEST_ETAG_ENABLE, getProperty(MESSAGE_DIGEST_ETAG_ENABLE, "false"));
     }
 
     private String getProperty(String name, String defaultValue) {
@@ -127,4 +129,8 @@ public class ConfigSourceImpl implements Constants, ConfigSource {
         return INSTANCE;
     }
 
+    @Override
+    public boolean isMessageDigest() {
+        return Boolean.parseBoolean(configurations.get(MESSAGE_DIGEST_ETAG_ENABLE));
+    }
 }

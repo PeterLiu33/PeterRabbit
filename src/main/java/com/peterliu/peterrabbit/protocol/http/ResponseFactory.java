@@ -5,6 +5,7 @@ import com.peterliu.peterrabbit.protocol.Context;
 import com.peterliu.peterrabbit.protocol.ProtocolHandler;
 import com.peterliu.peterrabbit.protocol.Request;
 import com.peterliu.peterrabbit.protocol.Response;
+import com.peterliu.peterrabbit.utils.StringUtils;
 
 /**
  * Created by bavatinolab on 17/2/19.
@@ -28,6 +29,12 @@ public abstract class ResponseFactory {
         ProtocolHandler handler = context.getHandler();
         HttpResponse response = handler.getResponse(context.getTaskData(), context.getRequest(), (String) null);
         response.setStatusCode(HttpResponse.ResponseCode.NOT_MODIFIED);
+        HttpRequest request = (HttpRequest) response.getRequest();
+        if(StringUtils.isBlank(request.getMessageDigest())){
+            response.addHeader("ETAG", response.getMessageDigest());
+        }else{
+            response.addHeader("ETAG", request.getMessageDigest());
+        }
         return (T)response;
     }
 
