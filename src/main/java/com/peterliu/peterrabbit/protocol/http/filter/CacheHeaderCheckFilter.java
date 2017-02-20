@@ -24,8 +24,9 @@ public class CacheHeaderCheckFilter extends FilterAdapter {
             String cacheControl = headers.get("Cache-Control");
             if ("no-cache".equalsIgnoreCase(cacheControl) ||
                     "no-cache".equalsIgnoreCase(headers.get("Pragma")) ||
-                    "no-store".equalsIgnoreCase(cacheControl)){
-                //客户端需要强刷最新数据
+                    "no-store".equalsIgnoreCase(cacheControl) ||
+                    configSource.getClientMaxAge() <= 0){
+                //客户端需要强刷最新数据, 或者服务端不允许进行缓存
                 request.setNeedJudgeCache(false);
             }else if(StringUtils.isNotBlank(cacheControl) && cacheControl.contains("max-age=")){
                 //获取客户端允许缓存的最大时间
